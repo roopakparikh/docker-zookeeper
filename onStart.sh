@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Small hack to get id until PetSet index is made available through 
+# Small hack to get id until PetSet index is made available through
 # Downward API (kubernetes issues #30427 #31218).
 T_HOSTNAME=$(hostname)
 T_ID=$( echo ${T_HOSTNAME} | cut -d "-" -f2 | cut -d "-" -f1 )
@@ -10,11 +10,12 @@ sleep 10
 
 # Get our 'zookeeper' peers through nslookup. This is locked to a service
 # name exposed as 'zookeeper'. Could do better here and make nslookup more
-# dynamic using a variable that contains the service name. 
+# dynamic using a variable that contains the service name.
 # TODO: Have a bootstrap image that contains bind-utils and also knows
 # the service name, performs nslookup and passes the list of PEERS to this
-# script. We can then remove bind-utils from the zookeeper container image.  
-PEERS=( $(nslookup -type=srv zookeeper.default | grep -oE '[^ ]+$' | grep ^zookeeper*) )
+# script. We can then remove bind-utils from the zookeeper container image.
+#PEERS=( $(nslookup -type=srv zookeeper.default | grep -oE '[^ ]+$' | grep ^zookeeper*) )
+PEERS=("zookeeper-0" "zookeeper-1" "zookeeper-2")
 
 # Output content of PEERS array to container log.
 echo "Zookeeper PEERS:" ${PEERS[@]}
@@ -34,11 +35,11 @@ else
   done
 fi
 
-# Trim any leading comma and output MEMBERS to container log. 
+# Trim any leading comma and output MEMBERS to container log.
 MEMBERS=${T_MEMBERS#\,}
 echo "Zookeeper MEMBERS:" ${MEMBERS}
 
-# Initialize, start zookeeper, add members as participant through zkCli, stop. 
+# Initialize, start zookeeper, add members as participant through zkCli, stop.
 # Finally start-foreground to keep container running.
 /opt/zookeeper/bin/zkServer-initialize.sh --force --myid=${T_ID}
 /opt/zookeeper/bin/zkServer.sh start /opt/zookeeper/conf/zoo.cfg

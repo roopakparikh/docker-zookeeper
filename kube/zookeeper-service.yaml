@@ -7,13 +7,19 @@ metadata:
   labels:
     service: zookeeper
 spec:
+  type: NodePort
   ports:
     - name: peer
       port: 2888
+      targetPort: 2888
+      protocol: TCP
     - name: leader-election
       port: 3888
+      protocol: TCP
+      targetPort: 3888
     - name: client
       port: 2181
-  clusterIP: None
+      targetPort: 2181
+      protocol: TCP
   selector:
     app: zookeeper

@@ -15,7 +15,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: zookeeper
-        image: docker.io/paulbrown/zookeeper:latest
+        image: docker.io/rparikh/zookeeper:latest
         imagePullPolicy: Always
         ports:
           - containerPort: 2888
@@ -29,7 +29,7 @@ spec:
   - metadata:
       name: data
     spec:
-      accessModes: 
+      accessModes:
         - ReadWriteOnce
       resources:
         requests:
