@@ -1,12 +1,11 @@
 #!/bin/bash
 
+# Allow time for our container to register with DNS.
+sleep 30
 # Small hack to get id until PetSet index is made available through
 # Downward API (kubernetes issues #30427 #31218).
 T_HOSTNAME=$(hostname)
 T_ID=$( echo ${T_HOSTNAME} | cut -d "-" -f2 | cut -d "-" -f1 )
-
-# Allow time for our container to register with DNS.
-sleep 10
 
 # Get our 'zookeeper' peers through nslookup. This is locked to a service
 # name exposed as 'zookeeper'. Could do better here and make nslookup more
